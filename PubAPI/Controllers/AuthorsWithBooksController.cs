@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PubAPI.DTOs;
+using PubAPI.Services.Interfaces;
 using PublisherData;
+using PublisherData.Repositories.Interfaces;
 
 namespace PubAPI.Controllers
 {
@@ -11,32 +13,18 @@ namespace PubAPI.Controllers
     public class AuthorsWithBooksController : ControllerBase
     {
         private readonly PubContext _context;
+        private readonly IAuthorsService _authorsService;
 
-        public AuthorsWithBooksController(PubContext context)
+        public AuthorsWithBooksController(PubContext context, IAuthorsService authorsService)
         {
             _context = context;
+            _authorsService = authorsService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuthorWithBooksDTO>>> GetAuthors()
+        public IEnumerable<AuthorWithBooksDTO> GetAuthors()
         {
-
-            return await _context.Authors
-            .Select(a => new AuthorWithBooksDTO
-            {
-                AuthorId = a.AuthorId,
-                FirstName = a.FirstName,
-                LastName = a.LastName,
-                Books = a.Books.Select
-               (b => new BooksDTO
-               {
-                   BookId = b.BookId,
-                   BasePrice = b.BasePrice,
-                   Title = b.Title,
-                   PublishDate = b.PublishDate
-               }
-               ).ToList()
-            }).ToListAsync();
+            return _authorsService.GetAuthorsWithBooksAsync();
         }
 
 
@@ -44,22 +32,7 @@ namespace PubAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorWithBooksDTO>> GetAuthor(int id)
         {
-            var author = await _context.Authors.Include(a => a.Books)
-              .Select(a => new AuthorWithBooksDTO
-              {
-                  AuthorId = a.AuthorId,
-                  FirstName = a.FirstName,
-                  LastName = a.LastName,
-                  Books = a.Books.Select(b => new BooksDTO
-                  {
-                      BookId = b.BookId,
-                      BasePrice = b.BasePrice,
-                      Title = b.Title,
-                      PublishDate = b.PublishDate
-                  }).ToList()
-
-              })
-                .FirstOrDefaultAsync(a => a.AuthorId == id);
+            var author = await _authorsService.GetAuthorByIdWithBooksAsync(id);
 
             if (author == null)
             {

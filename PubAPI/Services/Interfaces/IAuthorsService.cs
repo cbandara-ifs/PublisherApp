@@ -9,6 +9,10 @@ namespace PubAPI.Services.Interfaces
 
         Task<AuthorDTO?> GetAuthorByIdAsync(int id);
 
+        IEnumerable<AuthorWithBooksDTO> GetAuthorsWithBooksAsync();
+
+        Task<AuthorWithBooksDTO?> GetAuthorByIdWithBooksAsync(int id);
+
         Task UpdateAuthorAsync(AuthorDTO authorDTO);
 
         Task CreateAurthorAsync(AuthorDTOCreate authorDTOCreate);

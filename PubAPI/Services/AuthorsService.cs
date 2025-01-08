@@ -34,6 +34,22 @@ namespace PubAPI.Services
             return _mapper.Map<IEnumerable<AuthorDTO>>(authorList);
         }
 
+        public async Task<AuthorWithBooksDTO?> GetAuthorByIdWithBooksAsync(int id)
+        {
+            var author = await _aurthorsRepository.GetByIdWithBooksAsync(id);
+
+            return _mapper?.Map<AuthorWithBooksDTO>(author);
+        }
+
+        public IEnumerable<AuthorWithBooksDTO> GetAuthorsWithBooksAsync()
+        {
+            var authorsWithBookList = _aurthorsRepository
+                .GetAllWithBooks()
+                .AsEnumerable();
+
+            return _mapper.Map<IEnumerable<AuthorWithBooksDTO>>(authorsWithBookList);
+        }
+
         public async Task UpdateAuthorAsync(AuthorDTO authorDTO)
         {
             var author = _mapper.Map<Author>(authorDTO);

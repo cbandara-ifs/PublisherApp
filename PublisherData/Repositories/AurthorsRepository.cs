@@ -41,6 +41,21 @@ namespace PublisherData.Repositories
             return author;
         }
 
+        public async Task<Author?> GetByIdWithBooksAsync(int id)
+        {
+            var authorWithBooks = await _dbContext.Authors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.AuthorId == id);
+            return authorWithBooks;
+        }
+
+        public IQueryable<Author> GetAllWithBooks()
+        {
+            var authorsWithBooks = _dbContext.Authors
+                .Include(a => a.Books);
+            return authorsWithBooks;
+        }
+
         public async Task UpdateAurthorAsync(Author author)
         {
             var dbEntry = _dbContext.Entry(author);

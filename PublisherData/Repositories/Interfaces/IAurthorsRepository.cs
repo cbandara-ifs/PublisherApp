@@ -8,6 +8,10 @@ namespace PublisherData.Repositories.Interfaces
 
         Task<Author?> GetByIdAsync(int id);
 
+        IQueryable<Author> GetAllWithBooks();
+
+        Task<Author?> GetByIdWithBooksAsync(int id);
+
         Task UpdateAurthorAsync(Author author);
 
         Task CreateAurthorAsync(Author author);

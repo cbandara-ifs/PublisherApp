@@ -15,6 +15,10 @@ namespace PubAPI
                 .ForMember(dest => dest.AuthorId, opt => opt.Ignore())
                 .ForMember(dest => dest.Books, opt => opt.Ignore());
 
+            //CreateMap<AuthorWithBooksDTO, Author>();
+
+            CreateMap<Author, AuthorWithBooksDTO>();
+
             CreateMap<Author, AuthorDTO>();
 
             CreateMap<Book, BookDTO>()
